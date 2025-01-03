@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        textarea {
+            width: 80%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulate Your Post</h1>
+    <textarea id="postInput" placeholder="Write your post here..."></textarea><br>
+    <button onclick="submitPost()">Submit</button>
+
+    <div id="result" class="result"></div>
+
+    <script>
+        async function submitPost() {
+            const postInput = document.getElementById("postInput").value;
+
+            if (!postInput.trim()) {
+                document.getElementById("result").innerText = "Post cannot be empty!";
+                return;
+            }
+
+            // Send data to the backend
+            const response = await fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ post: postInput }),
+            });
+
+            const data = await response.json();
+
+            // Display the result
+            if (data.error) {
+                document.getElementById("result").innerText = `Error: ${data.error}`;
+            } else {
+                document.getElementById("result").innerHTML = `
+                    <strong>Analysis Score:</strong> ${data.analysis}<br>
+                    <strong>Sentiment:</strong> ${data.sentiment}
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from 'fs';    
+import fs from "fs";
 import getRandomResponse from "./randomjson.js";
 
 const app = express();
@@ -22,10 +22,6 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Route to render the landing page
-app.get("/", (req, res) => {
-  res.render("index"); // Render 'views/index.ejs'
-});
 
 // Route to handle form submission
 app.post("/submit", async (req, res) => {
@@ -33,22 +29,16 @@ app.post("/submit", async (req, res) => {
   console.log(userPost);
 
   if (!userPost || userPost.trim() === "") {
-    return res.render("index", {
-      error: "Post cannot be empty!",
-      analysis: null,
-    });
-  }
+    return res.status(400).json({ error: "Post cannot be empty!" });
+}
 
-  const mlResponse=getRandomResponse()
-    // Simulated ML API call (replace with your actual ML API endpoint)
-    // const mlApiUrl = "http://example-ml-api.com/analyze";
-    
-    // const mlResponse = await axios.post(mlApiUrl, { text: userPost });
-console.log(mlResponse)
+  const mlResponse = getRandomResponse();
+  // Simulated ML API call (replace with your actual ML API endpoint)
+  // const mlApiUrl = "http://example-ml-api.com/analyze";
 
-    const analysis = mlResponse.analysis; // Extract analysis result from API
-    res.render("index", { error: null, analysis });
- 
+  // const mlResponse = await axios.post(mlApiUrl, { text: userPost });
+  console.log(mlResponse);
+  res.json(mlResponse);
 });
 
 // Start the server
