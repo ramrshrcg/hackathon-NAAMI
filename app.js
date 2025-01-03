@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from 'fs';    
+import getRandomResponse from "./randomjson.js";
 
 const app = express();
 const PORT = 3000;
@@ -37,24 +39,16 @@ app.post("/submit", async (req, res) => {
     });
   }
 
-  try {
+  const mlResponse=getRandomResponse()
     // Simulated ML API call (replace with your actual ML API endpoint)
     // const mlApiUrl = "http://example-ml-api.com/analyze";
-    const mlApiUrl= 'hello'
+    
     // const mlResponse = await axios.post(mlApiUrl, { text: userPost });
-    const mlResponse={
-        analysis:80,
-        sentiment:"positive",
+console.log(mlResponse)
 
-    }
-
-    const analysis = mlResponse.data.analysis; // Extract analysis result from API
+    const analysis = mlResponse.analysis; // Extract analysis result from API
     res.render("index", { error: null, analysis });
-  } catch (error) {
-    console.error("Error calling ML/AI API:", error.message);
-    res.render("index", { error: "Error processing post.", analysis: null });
-  }
-
+ 
 });
 
 // Start the server
