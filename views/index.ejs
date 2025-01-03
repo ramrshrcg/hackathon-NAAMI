@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post Simulation</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div style="text-align: center; padding: 20px">
+      <h1>Simulate Your Post</h1>
+
+      <!-- Form to enter post and submit -->
+      <form action="/submit" method="POST">
+        <textarea
+          name="post"
+          placeholder="Write your post here..."
+          rows="5"
+          style="width: 80%; padding: 10px; margin-bottom: 10px"
+        ></textarea>
+
+        <br />
+        <button type="submit" style="padding: 10px 20px">Submit</button>
+      </form>
+
+      <% if(error){ %>
+      <textarea>
+            <%= error  %> 
+         </textarea
+      >
+      <% }%> <% if(analysis){ %>
+      <textarea>
+  
+          <%= analysis  %> 
+       </textarea
+      >
+      <% } %>
+
+      <!-- Display error message if any -->
+
+      <!-- Reaction area: Only show if analysis data is available -->
+    </div>
+  </body>
+</html>
