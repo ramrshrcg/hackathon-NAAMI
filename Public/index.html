@@ -1,67 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Post Simulation</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        textarea {
-            width: 80%;
-            height: 100px;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 18px;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+        background-color: #d2f2fd;
+      }
+      textarea {
+        width: 80%;
+        height: 100px;
+        margin-bottom: 10px;
+      }
+      button {
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+      .result {
+        margin-top: 20px;
+        font-size: 18px;
+      }
+      .progress-bar-container {
+        width: 80%;
+        height: 30px;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        overflow: hidden;
+        margin: 20px auto;
+        position: relative;
+      }
+      .progress-bar {
+        height: 100%;
+        background-color: #76c7c0;
+        width: 0;
+        line-height: 30px;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+      }
+
     </style>
-</head>
-<body>
+  </head>
+  <nav>
+   
+  </nav>
+  <body>
     <h1>Simulate Your Post</h1>
-    <textarea id="postInput" placeholder="Write your post here..."></textarea><br>
+    <textarea id="postInput" placeholder="Write your post here..."></textarea
+    ><br />
     <button onclick="submitPost()">Submit</button>
 
     <div id="result" class="result"></div>
+    <div id="likes" class="likes"></div>
+    <!-- Progress Bar -->
+    <div
+      class="progress-bar-container"
+      id="progressBarContainer"
+      style="display: none"
+    >
+      <div class="progress-bar" id="progressBar">0%</div>
+    </div>
 
     <script>
-        async function submitPost() {
-            const postInput = document.getElementById("postInput").value;
+      async function submitPost() {
+        const postInput = document.getElementById("postInput").value;
 
-            if (!postInput.trim()) {
-                document.getElementById("result").innerText = "Post cannot be empty!";
-                return;
-            }
+        if (!postInput.trim()) {
+          document.getElementById("result").innerText = "Post cannot be empty!";
+          return;
+        }
 
-            // Send data to the backend
-            const response = await fetch('/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ post: postInput }),
-            });
+        // Send data to the backend
+        const response = await fetch("/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ post: postInput }),
+        });
 
-            const data = await response.json();
+        const data = await response.json();
 
-            // Display the result
-            if (data.error) {
-                document.getElementById("result").innerText = `Error: ${data.error}`;
-            } else {
-                document.getElementById("result").innerHTML = `
-                    <strong>Analysis Score:</strong> ${data.analysis}<br>
+        // Display the result
+        if (data.error) {
+          document.getElementById("result").innerText = `Error: ${data.error}`;
+          document.getElementById("progressBarContainer").style.display =
+            "none";
+        } else {
+          // Update the progress bar
+          const progressBar = document.getElementById("progressBar");
+          const progressBarContainer = document.getElementById(
+            "progressBarContainer"
+          );
+
+          progressBarContainer.style.display = "block";
+          progressBar.style.width = `${data.analysis}%`;
+          progressBar.textContent = `${data.analysis}%`;
+
+          // Display sentiment
+          document.getElementById("result").innerHTML = `
                     <strong>Sentiment:</strong> ${data.sentiment}
                 `;
-            }
+          document.getElementById("likes").innerHTML = `
+                    <strong>Likes:</strong> ${data.analysis * 100}
+                `;
         }
+      }
     </script>
-</body>
+  </body>
 </html>
